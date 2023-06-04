@@ -7,6 +7,33 @@ var zoom_level = 6;
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
 var tileLayer = L.esri.basemapLayer("Topographic").addTo(map);    
 
+var icon = L.icon({
+    iconUrl: "assets/restaurant.png",
+    iconSize: [64, 64],
+    iconAnchor: [32, 32],
+    popupAnchor: [0, -11]
+});
+
+// a Leaflet marker is used by default to symbolize point features.
+const restaurantLayer = L.esri
+.featureLayer({
+    url:"https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Oldest_Surviving_Los_Angeles_Restaurants/FeatureServer/0",
+    // pointToLayer: function(geojson, latlng) {
+    // return L.marker(latlng, {
+    //     icon: icon
+    // });
+    // }
+});
+
+const dangerousDogs = L.esri.featureLayer({
+    url: "https://services.arcgis.com/rOo16HdIMeOBI4Mb/ArcGIS/rest/services/Declared_Dangerous_Dogs_Map/FeatureServer/0",            
+});
+
+const hurricanesLayer = L.esri.dynamicMapLayer({                 
+    url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer/",
+    opacity: 1,
+    useCors: false }).addTo(map);
+    
 var provinceLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
     layers: 'trickworld:IDN_adm1',
     opacity: 0.3
@@ -32,7 +59,9 @@ var overlayLayers = {
     "Housing Layer": housingLayer,
     "Majene Layer": majeneLayer,
     "Province Layer": provinceLayer,
-    "City Layer": cityLayer
+    "City Layer": cityLayer,
+    "Restaurant Layer": restaurantLayer,
+    "Hurricane Layer": hurricanesLayer
 };
 
 L.control.layers(null, overlayLayers).addTo(map);
