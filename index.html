@@ -50,14 +50,14 @@
     <section class="hero-container">
         <div id="modalFilter" class="modal">
             <div class="modal-content">
-                
                 <div class="modal-header">
                     <span class="close">&times;</span>
-                    <h2>modal header</h2>
+                    <h2>Filter by Region</h2>
                 </div>
                 
                 <div class="modal-body">
-                    <p>Filter area</p>
+                    <div class="select-container">
+                    <label for="provinsi_selection">Select Province:</label>
 
                     <select name="provinsi_selection" id="provinsi_selection" onchange="populateRegion(this.id, 'region_selection')">
                         <option value="Aceh">Aceh</option>
@@ -95,9 +95,12 @@
                         <option value="Sumatera_Utara">Sumatera Utara</option>
                         <option value="Yogyakarta">Yogyakarta</option>
                     </select>
+                    </div>
 
+                    <div class="select-container">
+                        <label for="region_selection">Select Region:</label>
                     <select name="region_selection" id="region_selection" onchange="changeCenterCoordinate('provinsi_selection', this.id)"></select>
-
+                    </div>
                 </div>
 
             </div>
