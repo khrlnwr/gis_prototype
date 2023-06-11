@@ -32,7 +32,7 @@ const dangerousDogs = L.esri.featureLayer({
 const hurricanesLayer = L.esri.dynamicMapLayer({                 
     url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer/",
     opacity: 1,
-    useCors: false }).addTo(map);
+    useCors: false });
     
 var provinceLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
     layers: 'trickworld:IDN_adm1',
@@ -44,13 +44,18 @@ var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?
     opacity: 0.3
 });
 
+var polda_polres = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
+    layers: 'trickworld:Polda_Polres_Polygon',
+    opacity: 0.4
+});
+
 var housingLayer = L.esri.dynamicMapLayer({
     url: "https://gis.bnpb.go.id/server/rest/services/rumah/MapServer/",
     opacity: 0.5,
 });
 
 var majeneLayer = L.esri.dynamicMapLayer({
-    url: "https://services.arcgisonline.com/arcgis/rest/services/Specialty/Soil_Survey_Map/MapServer/",
+    url: "https://gis.bnpb.go.id/server/rest/services/Titik_Epicenter_Majene/MapServer",
     opacity: 0.5
 });
 
@@ -61,7 +66,8 @@ var overlayLayers = {
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
     "Restaurant Layer": restaurantLayer,
-    "Hurricane Layer": hurricanesLayer
+    "Hurricane Layer": hurricanesLayer,
+    "Polda & Polres": polda_polres
 };
 
 L.control.layers(null, overlayLayers).addTo(map);
