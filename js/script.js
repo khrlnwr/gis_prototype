@@ -44,6 +44,11 @@ var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?
     opacity: 0.3
 });
 
+var kepolisian = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
+    layers: 'trickworld:Polda_polres',
+    opacity: 0.3
+});
+
 var housingLayer = L.esri.dynamicMapLayer({
     url: "https://gis.bnpb.go.id/server/rest/services/rumah/MapServer/",
     opacity: 0.5,
@@ -60,6 +65,7 @@ var overlayLayers = {
     "Majene Layer": majeneLayer,
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
+    "Police Layer": kepolisian,
     "Restaurant Layer": restaurantLayer,
     "Hurricane Layer": hurricanesLayer
 };
