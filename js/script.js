@@ -5,7 +5,7 @@ var lat_lng = [37.71, -99.88];
 var zoom_level = 6;
 
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
-var tileLayer = L.esri.basemapLayer("Topographic").addTo(map);    
+var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);    
 
 var icon = L.icon({
     iconUrl: "assets/restaurant.png",
