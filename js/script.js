@@ -5,7 +5,7 @@ var lat_lng = [37.71, -99.88];
 var zoom_level = 6;
 
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
-var tileLayer = L.esri.basemapLayer("Topographic").addTo(map);    
+var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);    
 
 var icon = L.icon({
     iconUrl: "assets/restaurant.png",
@@ -44,9 +44,9 @@ var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?
     opacity: 0.3
 });
 
-var polda_polres = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
+var kepolisian = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
     layers: 'trickworld:Polda_polres',
-    opacity: 0.4
+    opacity: 0.3
 });
 
 var housingLayer = L.esri.dynamicMapLayer({
@@ -62,7 +62,7 @@ var majeneLayer = L.esri.dynamicMapLayer({
 var overlayLayers = {
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
-    "Polda & Polres": polda_polres
+    "Police Layer": kepolisian,
 };
 
 L.control.layers(null, overlayLayers).addTo(map);
@@ -97,15 +97,15 @@ function getFeatureInfoUrl(latlng) {
           request: 'GetFeatureInfo',
           service: 'WMS',
           srs: 'EPSG:4326',
-          styles: polda_polres.wmsParams.styles,
-          transparent: polda_polres.wmsParams.transparent,
-          version: polda_polres.wmsParams.version,
-          format: polda_polres.wmsParams.format,
+          styles: kepolisian.wmsParams.styles,
+          transparent: kepolisian.wmsParams.transparent,
+          version: kepolisian.wmsParams.version,
+          format: kepolisian.wmsParams.format,
           bbox: bounds.toBBoxString(),
           height: size.y,
           width: size.x,
-          layers: polda_polres.wmsParams.layers,
-          query_layers: polda_polres.wmsParams.layers,
+          layers: kepolisian.wmsParams.layers,
+          query_layers: kepolisian.wmsParams.layers,
           info_format: 'text/html'
         };
   
