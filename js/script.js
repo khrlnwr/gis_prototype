@@ -45,7 +45,7 @@ var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?
 });
 
 var polda_polres = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
-    layers: 'trickworld:Polda_Polres_Polygon',
+    layers: 'trickworld:Polda_polres',
     opacity: 0.4
 });
 
@@ -59,18 +59,61 @@ var majeneLayer = L.esri.dynamicMapLayer({
     opacity: 0.5
 });
 
-
 var overlayLayers = {
-    "Housing Layer": housingLayer,
-    "Majene Layer": majeneLayer,
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
-    "Restaurant Layer": restaurantLayer,
-    "Hurricane Layer": hurricanesLayer,
     "Polda & Polres": polda_polres
 };
 
 L.control.layers(null, overlayLayers).addTo(map);
+
+map.on('click', function(e) {
+    var url = getFeatureInfoUrl(e.latlng);
+    console.log("URL: " + url);
+
+    fetch(url)
+    .then(function(response) {
+      return response.text();
+    })
+    .then(function(data) {
+      // Create a popup with the response data
+      var popupContent = data;
+
+      // Display the popup at the clicked location
+      L.popup()
+        .setLatLng(e.latlng)
+        .setContent(popupContent)
+        .openOn(map);
+    });
+
+});
+
+// Function to construct the GetFeatureInfo request URL
+function getFeatureInfoUrl(latlng) {
+    var point = map.latLngToContainerPoint(latlng, map.getZoom()),
+        size = map.getSize(),
+        bounds = map.getBounds(),
+        params = {
+          request: 'GetFeatureInfo',
+          service: 'WMS',
+          srs: 'EPSG:4326',
+          styles: polda_polres.wmsParams.styles,
+          transparent: polda_polres.wmsParams.transparent,
+          version: polda_polres.wmsParams.version,
+          format: polda_polres.wmsParams.format,
+          bbox: bounds.toBBoxString(),
+          height: size.y,
+          width: size.x,
+          layers: polda_polres.wmsParams.layers,
+          query_layers: polda_polres.wmsParams.layers,
+          info_format: 'text/html'
+        };
+  
+    params[params.version === '1.3.0' ? 'i' : 'x'] = Math.round(point.x);
+    params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
+  
+    return polda_polres._url + L.Util.getParamString(params, polda_polres._url, true);
+}
 
 // -------------------------- MODAL --------------------------
 var modal = document.getElementById("modalFilter");
