@@ -112,7 +112,7 @@ function getFeatureInfoUrl(latlng) {
     params[params.version === '1.3.0' ? 'i' : 'x'] = Math.round(point.x);
     params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
   
-    return polda_polres._url + L.Util.getParamString(params, polda_polres._url, true);
+    return kepolisian._url + L.Util.getParamString(params, kepolisian._url, true);
 }
 
 // -------------------------- MODAL --------------------------
