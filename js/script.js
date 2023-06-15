@@ -83,9 +83,11 @@ map.on('click', function(e) {
         var layer = overlayLayers[layerName];
         var zIndex = layer.options.zIndex || 0;
 
-        if (zIndex > maxZIndex) {
-        topLayer = layer;
-        maxZIndex = zIndex;
+        var visible = map.hasLayer(layer);
+
+        if (zIndex > maxZIndex && visible) {
+            topLayer = layer;
+            maxZIndex = zIndex;
         }
     }
 
