@@ -59,37 +59,61 @@ var majeneLayer = L.esri.dynamicMapLayer({
     opacity: 0.5
 });
 
+var kodam_koramil = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
+    layers: 'trickworld:Kodim_koramil',
+    opacity: 0.3
+});
+
 var overlayLayers = {
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
     "Police Layer": kepolisian,
+    "Kodim Koramil": kodam_koramil
 };
 
 L.control.layers(null, overlayLayers).addTo(map);
 
 map.on('click', function(e) {
-    var url = getFeatureInfoUrl(e.latlng);
-    console.log("URL: " + url);
 
-    fetch(url)
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(data) {
-      // Create a popup with the response data
-      var popupContent = data;
+    var topLayer = null;
+    var maxZIndex = -Infinity;
 
-      // Display the popup at the clicked location
-      L.popup()
-        .setLatLng(e.latlng)
-        .setContent(popupContent)
-        .openOn(map);
-    });
+    // Iterate over the overlayLayers object to find the top layer
+    for (var layerName in overlayLayers) {
+        var layer = overlayLayers[layerName];
+        var zIndex = layer.options.zIndex || 0;
+
+        if (zIndex > maxZIndex) {
+        topLayer = layer;
+        maxZIndex = zIndex;
+        }
+    }
+
+    if (topLayer) {
+        var url = getFeatureInfoUrl(e.latlng, topLayer);
+        console.log("URL: " + url);
+    
+        fetch(url)
+        .then(function(response) {
+          return response.text();
+        })
+        .then(function(data) {
+          // Create a popup with the response data
+          var popupContent = data;
+    
+          // Display the popup at the clicked location
+          L.popup()
+            .setLatLng(e.latlng)
+            .setContent(popupContent)
+            .openOn(map);
+        });
+    }
+
 
 });
 
 // Function to construct the GetFeatureInfo request URL
-function getFeatureInfoUrl(latlng) {
+function getFeatureInfoUrl(latlng, layer) {
     var point = map.latLngToContainerPoint(latlng, map.getZoom()),
         size = map.getSize(),
         bounds = map.getBounds(),
@@ -97,22 +121,22 @@ function getFeatureInfoUrl(latlng) {
           request: 'GetFeatureInfo',
           service: 'WMS',
           srs: 'EPSG:4326',
-          styles: kepolisian.wmsParams.styles,
-          transparent: kepolisian.wmsParams.transparent,
-          version: kepolisian.wmsParams.version,
-          format: kepolisian.wmsParams.format,
+          styles: layer.wmsParams.styles,
+          transparent: layer.wmsParams.transparent,
+          version: layer.wmsParams.version,
+          format: layer.wmsParams.format,
           bbox: bounds.toBBoxString(),
           height: size.y,
           width: size.x,
-          layers: kepolisian.wmsParams.layers,
-          query_layers: kepolisian.wmsParams.layers,
+          layers: layer.wmsParams.layers,
+          query_layers: layer.wmsParams.layers,
           info_format: 'text/html'
         };
   
     params[params.version === '1.3.0' ? 'i' : 'x'] = Math.round(point.x);
     params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
   
-    return kepolisian._url + L.Util.getParamString(params, kepolisian._url, true);
+    return layer._url + L.Util.getParamString(params, layer._url, true);
 }
 
 // -------------------------- MODAL --------------------------
