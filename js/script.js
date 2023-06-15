@@ -96,18 +96,28 @@ map.on('click', function(e) {
         console.log("URL: " + url);
     
         fetch(url)
-        .then(function(response) {
-          return response.text();
-        })
-        .then(function(data) {
-          // Create a popup with the response data
-          var popupContent = data;
+            .then(function(response) {
+                console.log(response);
+                return response.text();
+        }).then(function(data) {
+
+            var name = "";
+            if (topLayer == kodam_koramil) {
+                name = getKodimKoramilName(data);
+                console.log(name);
+            } else if (topLayer == kepolisian) {
+                name = getKepolisianName(data);
+                console.log(name);
+            }
+
+            // console.log(data);
+            var popupContent = name;
     
-          // Display the popup at the clicked location
-          L.popup()
-            .setLatLng(e.latlng)
-            .setContent(popupContent)
-            .openOn(map);
+            // Display the popup at the clicked location
+            L.popup()
+                .setLatLng(e.latlng)
+                .setContent(popupContent)
+                .openOn(map);
         });
     }
 
@@ -139,6 +149,64 @@ function getFeatureInfoUrl(latlng, layer) {
     params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
   
     return layer._url + L.Util.getParamString(params, layer._url, true);
+}
+
+function getKodimKoramilName(data) {
+    var htmlContent = data;
+    var container = document.createElement('div');
+
+    container.innerHTML = htmlContent;            
+    var table = container.querySelector('table.featureInfo'); 
+    var rows = table.querySelectorAll('tr');
+    var name = "";
+    for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        var columns = row.querySelectorAll('td');
+
+        // Extract the values from each column
+        var fid = columns[0].textContent;
+        var id1 = columns[1].textContent;
+        var name1 = columns[2].textContent;
+        var id2 = columns[3].textContent;
+        var name2 = columns[4].textContent;
+        var id4 = columns[5].textContent;
+        var name4 = columns[6].textContent;
+        var latitude = columns[7].textContent;
+        var longitude = columns[8].textContent;
+        var alamat = columns[9].textContent;
+
+        name = name4 + " " + alamat + " " + latitude + " " + longitude;
+        break;
+    }
+
+    return name;
+}
+
+
+function getKepolisianName(data) {
+    var htmlContent = data;
+    var container = document.createElement('div');
+
+    container.innerHTML = htmlContent;            
+    var table = container.querySelector('table.featureInfo'); 
+
+    var rows = table.querySelectorAll('tr');
+    var name = "";
+
+    for (var i=1; i<rows.length; i++) {
+        var row = rows[i];
+        var col = row.querySelectorAll('td');
+
+        var name_ = col[6].textContent;
+        var alamat_ = col[9].textContent;
+        var lat_ = col[7].textContent;
+        var long_ = col[8].textContent;
+
+        name = name_ + " " + alamat_ + " " + lat_ + " " + long_;
+        break;
+    }
+
+    return name;
 }
 
 // -------------------------- MODAL --------------------------
