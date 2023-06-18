@@ -1,13 +1,13 @@
 
 // ---------------------- MAP CONTROL ----------------------
 var element = document.getElementById("map");
-var lat_lng = [37.71, -99.88];
+var lat_lng = [-7.328998, 110.499975];
 var zoom_level = 6;
 
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
 var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);    
 
-var icon = L.icon({
+var customIcon = L.icon({
     iconUrl: "assets/restaurant.png",
     iconSize: [64, 64],
     iconAnchor: [32, 32],
@@ -46,7 +46,7 @@ var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?
 
 var kepolisian = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
     layers: 'trickworld:Polda_polres',
-    opacity: 0.3
+    opacity: 0.3,
 });
 
 var housingLayer = L.esri.dynamicMapLayer({
@@ -63,6 +63,7 @@ var kodam_koramil = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/
     layers: 'trickworld:Kodim_koramil',
     opacity: 0.3
 });
+
 
 var overlayLayers = {
     "Province Layer": provinceLayer,
