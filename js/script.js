@@ -5,24 +5,26 @@ var lat_lng = [-7.328998, 110.499975];
 var zoom_level = 6;
 
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
-var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);    
+// var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);    
 
-var customIcon = L.icon({
-    iconUrl: "assets/restaurant.png",
-    iconSize: [64, 64],
-    iconAnchor: [32, 32],
-    popupAnchor: [0, -11]
-});
-
+// Define the basemaps
+var basemaps = {
+    "Imagery": L.esri.basemapLayer("Imagery"),
+    "OpenStreetMap": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '© OpenStreetMap contributors'
+    })
+};
+    
+// Add the default basemap
+basemaps["Imagery"].addTo(map);
+  
+// Add the basemap control
+L.control.layers(basemaps).addTo(map);
+  
 // a Leaflet marker is used by default to symbolize point features.
 const restaurantLayer = L.esri
 .featureLayer({
     url:"https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Oldest_Surviving_Los_Angeles_Restaurants/FeatureServer/0",
-    // pointToLayer: function(geojson, latlng) {
-    // return L.marker(latlng, {
-    //     icon: icon
-    // });
-    // }
 });
 
 const dangerousDogs = L.esri.featureLayer({
