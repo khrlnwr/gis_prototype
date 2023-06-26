@@ -66,12 +66,23 @@ var kodam_koramil = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/
     opacity: 0.3
 });
 
+var pulau_terluar = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
+    layers: 'trickworld:Pulau Terluar',
+    opacity: 0.3
+});
+
+var pos_perbatasan = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
+    layers: 'trickworld:Pos_Pamtas_2',
+    opacity: 0.3
+}); 
 
 var overlayLayers = {
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
     "Police Layer": kepolisian,
-    "Kodim Koramil": kodam_koramil
+    "Kodim Koramil": kodam_koramil,
+    "Pulau Terluar": pulau_terluar,
+    "Pos Perbatasan": pos_perbatasan
 };
 
 L.control.layers(null, overlayLayers).addTo(map);
@@ -111,9 +122,17 @@ map.on('click', function(e) {
             } else if (topLayer == kepolisian) {
                 name = getKepolisianName(data);
                 console.log(name);
+            } else if (topLayer == pulau_terluar) {
+                name = getPulauTerluarName(data);
+                console.log(data);
+            } else if (topLayer == cityLayer) {
+                name = getKotaName(data)
+                //console.log(data);
+            } else if (topLayer == pos_perbatasan) {
+                name = getPosPerbatasanName(data);
+                console.log(data);
             }
 
-            // console.log(data);
             var popupContent = name;
     
             // Display the popup at the clicked location
@@ -152,6 +171,86 @@ function getFeatureInfoUrl(latlng, layer) {
     params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
   
     return layer._url + L.Util.getParamString(params, layer._url, true);
+}
+
+function getKotaName(data) {
+    var htmlContent = data;
+    var container = document.createElement('div');
+
+    container.innerHTML = htmlContent;            
+    var table = container.querySelector('table.featureInfo'); 
+    var rows = table.querySelectorAll('tr');
+    var name = "";
+
+    for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        var columns = row.querySelectorAll('td');
+
+        var kota = columns[7].textContent;
+        var prov = columns[5].textContent;
+        var negara = columns[3].textContent;
+        
+        name = kota + " " + prov + " " + negara;
+        break;
+    }
+
+    return name;
+}
+
+function getPulauTerluarName(data) {
+    var htmlContent = data;
+    var container = document.createElement('div');
+
+    container.innerHTML = htmlContent;            
+    var table = container.querySelector('table.featureInfo'); 
+    var rows = table.querySelectorAll('tr');
+    var name = "";
+
+    for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        var columns = row.querySelectorAll('td');
+
+        var fid = columns[0].textContent;
+        var id1 = columns[1].textContent;
+        var nameProv = columns[2].textContent;
+        var namaKab = columns[4].textContent;
+        var namaKec = columns[6].textContent;
+        var perairan = columns[7].textContent;
+        var berbatasanDengan = columns[8].textContent;
+        var lat = columns[9].textContent;
+        var lng = columns[10].textContent;
+        
+        name = namaKec + " " + namaKab + " " + nameProv + " " + lat + " " + lng + ". Berbatasan dengan " + perairan + " dan " + berbatasanDengan;
+        break;
+    }
+
+    return name;
+}
+
+function getPosPerbatasanName(data) {
+    var htmlContent = data;
+    var container = document.createElement('div');
+
+    container.innerHTML = htmlContent;            
+    var table = container.querySelector('table.featureInfo'); 
+    var rows = table.querySelectorAll('tr');
+    var name = "";
+    for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        var columns = row.querySelectorAll('td');
+
+        var satgas = columns[7].textContent;
+        var pos = columns[6].textContent;
+        var kota = columns[4].textContent;
+        var prov = columns[2].textContent;
+        var lat = columns[8].textContent;
+        var lng = columns[9].textContent;
+
+        name = satgas + "," + pos + ", " + kota + " " + prov + ". " + lat + " " + lng;
+        break;
+    }
+
+    return name;
 }
 
 function getKodimKoramilName(data) {
@@ -242,7 +341,34 @@ function populateRegion(prov_sl, reg_sl) {
         var optionArray = ["|", "kab_batang|Kabupaten Batang", "kab_blora|Kabupaten Blora", "kab_bojonegoro|Kabupaten Bojonegoro", "kab_brebes|Kabupaten Brebes", "kab_cilacap|Kabupaten Cilacap", "kab_demak|Kabupaten Demak", "kab_grobogan|Kabupaten Grobogan", "kab_jepara|Kabupaten Jepara", "kab_karanganyar|Kabupaten Karanganyar", "kab_kebumen|Kabupaten Kebumen", "kab_kendal|Kabupaten Kendal", "kab_klaten|Kabupaten Klaten", "kab_kudus|Kabupaten Kudus", "kab_magelang|Kabupaten Magelang", "kab_pekalongan|Kabupaten Pekalongan", "kab_pemalang|Kabupaten Pemalang", "kab_purbalingga|Kabupaten Purbalingga", "kab_purworejo|Kabupaten Purworejo", "kab_rembang|Kabupaten Rembang", "kab_semarang|Kabupaten Semarang", "kab_sragen|Kabupaten Sragen", "kab_sukoharjo|Kabupaten Sukoharjo", "kab_tegal|Kabupaten Tegal", "kab_temanggung|Kabupaten Temanggung", "kab_wonogiri|Kabupaten Wonogiri", "kab_wonosobo|Kabupaten Wonosobo", "kota_magelang|Kota Magelang", "kota_pekalongan|Kota Pekalongan", "kota_salatiga|Kota Salatiga", "kota_semarang|Kota Semarang", "kota_surakarta|Kota Surakarta", "kota_tegal|Kota Tegal"];
     } else if (prov_sl.value == "Jawa_Timur") {
         var optionArray = ["|", "kab_bangkalan|Kabupaten Bangkalan", "kab_banyuwangi|Kabupaten Banyuwangi", "kab_blitar|Kabupaten Blitar", "kab_bojonegoro|Kabupaten Bojonegoro", "kab_bondowoso|Kabupaten Bondowoso", "kab_gresik|Kabupaten Gresik", "kab_jember|Kabupaten Jember", "kab_jombang|Kabupaten Jombang", "kab_kediri|Kabupaten Kediri", "kab_lamongan|Kabupaten Lamongan", "kab_lumajang|Kabupaten Lumajang", "kab_madiun|Kabupaten Madiun", "kab_magetan|Kabupaten Magetan", "kab_malang|Kabupaten Malang", "kab_mojo_kerto|Kabupaten Mojokerto", "kab_nganjuk|Kabupaten Nganjuk", "kab_ngawi|Kabupaten Ngawi", "kab_pacitan|Kabupaten Pacitan", "kab_pamekasan|Kabupaten Pamekasan", "kab_pasuruan|Kabupaten Pasuruan", "kab_ponorogo|Kabupaten Ponorogo", "kab_probolinggo|Kabupaten Probolinggo", "kab_sampang|Kabupaten Sampang", "kab_sidoarjo|Kabupaten Sidoarjo", "kab_situbondo|Kabupaten Situbondo", "kab_sumenep|Kabupaten Sumenep", "kab_tuban|Kabupaten Tuban", "kab_tulungagung|Kabupaten Tulungagung", "kota_batu|Kota Batu", "kota_blitar|Kota Blitar", "kota_kediri|Kota Kediri", "kota_madiun|Kota Madiun", "kota_malang|Kota Malang", "kota_mojo_kerto|Kota Mojokerto", "kota_pasuruan|Kota Pasuruan", "kota_probolinggo|Kota Probolinggo", "kota_surabaya|Kota Surabaya"];
-    }
+    } else if (prov_sl.value == "Aceh") {
+        var optionArray = [
+            "|",
+            "kota_banda_aceh|Banda Aceh",
+            "kab_aceh_barat|Kabupaten Aceh Barat",
+            "kab_aceh_barat_daya|Kabupaten Aceh Barat Daya",
+            "kab_aceh_besar|Kabupaten Aceh Besar",
+            "kab_aceh_jaya|Kabupaten Aceh Jaya",
+            "kab_aceh_selatan|Kabupaten Aceh Selatan",
+            "kab_aceh_singkil|Kabupaten Aceh Singkil",
+            "kab_aceh_tamiang|Kabupaten Aceh Tamiang",
+            "kab_aceh_tengah|Kabupaten Aceh Tengah",
+            "kab_aceh_tenggara|Kabupaten Aceh Tenggara",
+            "kab_aceh_timur|Kabupaten Aceh Timur",
+            "kab_aceh_utara|Kabupaten Aceh Utara",
+            "kab_bener_merah|Kabupaten Bener Meriah",
+            "kab_bireuen|Kabupaten Bireuen",
+            "kab_gayo_lues|Kabupaten Gayo Lues",
+            "kab_langsa|Kabupaten Langsa",
+            "kab_lhokseumawe|Kabupaten Lhokseumawe",
+            "kab_nagan_raya|Kabupaten Nagan Raya",
+            "kab_pidie|Kabupaten Pidie",
+            "kab_pidie_jaya|Kabupaten Pidie Jaya",
+            "kab_sabang|Kabupaten Sabang",
+            "kab_simeulue|Kabupaten Simeulue",
+            "kab_subulussalam|Kabupaten Subulussalam"
+          ];          
+    } 
 
     for (var index in optionArray) {
         var pair = optionArray[index].split("|");
@@ -274,12 +400,18 @@ function changeCenterCoordinate(prov_sl, reg_sl) {
             var latitude = data[0].lat;
             var longitude = data[0].lon;
             
-            // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);            
-            // console.log(region);
+            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);            
+            console.log(region);
 
-            const city = region.charAt(0).toUpperCase() + region.slice(1);
-            // console.log(city);
+            var city = region.charAt(0).toUpperCase() + region.slice(1);
+            var index = city.indexOf("_");
+            if (index != -1) {
+                city = city.substring(0, index) + " " + city.charAt(index+1).toUpperCase() + city.slice(index+2);
+                // city = city.replace("_", " ");
+            }
 
+            console.log(city);
+            
             cityLayer.wmsParams.cql_filter = `NAME_2='${city}'`;
             cityLayer.redraw();
 
