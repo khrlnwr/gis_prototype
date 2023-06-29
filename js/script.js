@@ -14,6 +14,13 @@ var basemaps = {
     "Imagery": L.esri.basemapLayer("Imagery"),
     "OpenStreetMap": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '© OpenStreetMap contributors'
+    }),
+    "OpenStreetMap_DE" : L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }),
+    "Esri WMS": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
     })
 };
     
@@ -21,7 +28,7 @@ var basemaps = {
 basemaps["Imagery"].addTo(map);
   
 // Add the basemap control
-L.control.layers(basemaps).addTo(map);
+// L.control.layers(basemaps).addTo(map);
   
 // a Leaflet marker is used by default to symbolize point features.
 const restaurantLayer = L.esri
@@ -50,7 +57,9 @@ var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace +
 
 var kepolisian = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
     layers: workspace + ':Polda_polres',
-    opacity: 0.3,
+    opacity: 1,
+    transparent: true,
+    format: 'image/png' // Set the format to PNG
 });
 
 var housingLayer = L.esri.dynamicMapLayer({
@@ -65,17 +74,23 @@ var majeneLayer = L.esri.dynamicMapLayer({
 
 var kodam_koramil = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
     layers: workspace + ':Kodim_koramil',
-    opacity: 0.3
+    opacity: 1,
+    transparent: true,
+    format: 'image/png'
 });
 
 var pulau_terluar = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
     layers: workspace + ':Pulau Terluar',
-    opacity: 0.3
+    opacity: 1,
+    transparent: true,
+    format: 'image/png'
 });
 
 var pos_perbatasan = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
     layers: workspace + ':Pos_Pamtas_2',
-    opacity: 0.3
+    opacity: 1,
+    transparent: true,
+    format: 'image/png'
 }); 
 
 var overlayLayers = {
@@ -87,7 +102,7 @@ var overlayLayers = {
     "Pos Perbatasan": pos_perbatasan
 };
 
-L.control.layers(null, overlayLayers).addTo(map);
+L.control.layers(basemaps, overlayLayers).addTo(map);
 
 map.on('click', function(e) {
 
