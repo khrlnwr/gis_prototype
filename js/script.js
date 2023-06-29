@@ -5,6 +5,8 @@ var lat_lng = [-7.328998, 110.499975];
 var zoom_level = 6;
 
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
+const workspace = "trickworld";
+
 // var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);    
 
 // Define the basemaps
@@ -36,18 +38,18 @@ const hurricanesLayer = L.esri.dynamicMapLayer({
     opacity: 1,
     useCors: false });
     
-var provinceLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
-    layers: 'trickworld:IDN_adm1',
+var provinceLayer = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':IDN_adm1',
     opacity: 0.3
 });
 
-var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
-    layers: 'trickworld:IDN_adm2',
+var cityLayer = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':IDN_adm2',
     opacity: 0.3
 });
 
-var kepolisian = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
-    layers: 'trickworld:Polda_polres',
+var kepolisian = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':Polda_polres',
     opacity: 0.3,
 });
 
@@ -61,18 +63,18 @@ var majeneLayer = L.esri.dynamicMapLayer({
     opacity: 0.5
 });
 
-var kodam_koramil = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
-    layers: 'trickworld:Kodim_koramil',
+var kodam_koramil = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':Kodim_koramil',
     opacity: 0.3
 });
 
-var pulau_terluar = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
-    layers: 'trickworld:Pulau Terluar',
+var pulau_terluar = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':Pulau Terluar',
     opacity: 0.3
 });
 
-var pos_perbatasan = L.tileLayer.wms('http://localhost:8080/geoserver/trickworld/wms?', {
-    layers: 'trickworld:Pos_Pamtas_2',
+var pos_perbatasan = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':Pos_Pamtas_2',
     opacity: 0.3
 }); 
 
@@ -368,7 +370,509 @@ function populateRegion(prov_sl, reg_sl) {
             "kab_simeulue|Kabupaten Simeulue",
             "kab_subulussalam|Kabupaten Subulussalam"
           ];          
-    } 
+    } else if (prov_sl.value == "Bali") {
+        var optionArray = ["|", "kota_denpasar|Denpasar", "kab_buleleng|Kabupaten Buleleng", "kab_jembrana|Kabupaten Jembrana", "kab_tabanan|Kabupaten Tabanan", "kab_badung|Kabupaten Badung", "kab_gianyar|Kabupaten Gianyar", "kab_klungkung|Kabupaten Klungkung", "kab_bangli|Kabupaten Bangli", "kab_karangasem|Kabupaten Karangasem"];
+    } else if (prov_sl.value == "Bangka_Belitung") {
+        var optionArray = [
+            "|",
+            "kab_bangka|Kabupaten Bangka",
+            "kab_belitung|Kabupaten Belitung",
+            "kab_bangka_barat|Kabupaten Bangka Barat",
+            "kab_bangka_selatan|Kabupaten Bangka Selatan",
+            "kab_bangka_tengah|Kabupaten Bangka Tengah",
+            "kab_bangka_timur|Kabupaten Bangka Timur",
+            "kab_belitung_timur|Kabupaten Belitung Timur",
+            "kota_pangkalpinang|Kota Pangkalpinang"
+          ];          
+    } else if (prov_sl.value == "Banten") {
+        var optionArray = [
+            "|",
+            "kab_lebak|Kabupaten Lebak",
+            "kab_pandeglang|Kabupaten Pandeglang",
+            "kab_serang|Kabupaten Serang",
+            "kab_tangerang|Kabupaten Tangerang",
+            "kota_cilegon|Kota Cilegon",
+            "kota_serang|Kota Serang",
+            "kota_tangerang|Kota Tangerang",
+            "kota_tangerang_selatan|Kota Tangerang Selatan"
+          ];
+    } else if (prov_sl.value == "Bengkulu") {
+        var optionArray = [
+            "|",
+            "kab_bengkulu_selatan|Kabupaten Bengkulu Selatan",
+            "kab_bengkulu_tengah|Kabupaten Bengkulu Tengah",
+            "kab_bengkulu_utara|Kabupaten Bengkulu Utara",
+            "kab_kaur|Kabupaten Kaur",
+            "kab_kepahiang|Kabupaten Kepahiang",
+            "kab_lebong|Kabupaten Lebong",
+            "kab_muko_muko|Kabupaten Muko-Muko",
+            "kab_rejang_lebong|Kabupaten Rejang Lebong",
+            "kab_seluma|Kabupaten Seluma",
+            "kota_bengkulu|Kota Bengkulu"
+          ];          
+    } else if (prov_sl.value == "Gorontalo") {
+        var optionArray = [
+            "|",
+            "kab_boalemo|Kabupaten Boalemo",
+            "kab_bone_bolango|Kabupaten Bone Bolango",
+            "kab_gorontalo|Kabupaten Gorontalo",
+            "kab_gorontalo_utara|Kabupaten Gorontalo Utara",
+            "kab_gorontalo_selatan|Kabupaten Gorontalo Selatan",
+            "kab_pahuwato|Kabupaten Pahuwato",
+            "kota_gorontalo|Kota Gorontalo"
+          ];          
+    } else if (prov_sl.value == "Jakarta") {
+        var optionArray = [
+            "|",
+            "kota_jakarta_barat|Kota Administrasi Jakarta Barat",
+            "kota_jakarta_pusat|Kota Administrasi Jakarta Pusat",
+            "kota_jakarta_selatan|Kota Administrasi Jakarta Selatan",
+            "kota_jakarta_timur|Kota Administrasi Jakarta Timur",
+            "kota_jakarta_utara|Kota Administrasi Jakarta Utara",
+            "kota_kepulauan_seribu|Kota Administrasi Kepulauan Seribu"
+          ];          
+    } else if (prov_sl.value == "Jambi") {
+        var optionArray = [
+            "|",
+            "kab_batanghari|Kabupaten Batanghari",
+            "kab_bungo|Kabupaten Bungo",
+            "kab_kerinci|Kabupaten Kerinci",
+            "kab_merangin|Kabupaten Merangin",
+            "kab_muaro_jambi|Kabupaten Muaro Jambi",
+            "kab_sarolangun|Kabupaten Sarolangun",
+            "kab_tanjung_jabung_barat|Kabupaten Tanjung Jabung Barat",
+            "kab_tanjung_jabung_timur|Kabupaten Tanjung Jabung Timur",
+            "kab_tanjung_jabung_utara|Kabupaten Tanjung Jabung Utara",
+            "kab_tebo|Kabupaten Tebo",
+            "kota_jambi|Kota Jambi",
+            "kota_sungai_penuh|Kota Sungai Penuh"
+          ];          
+    } else if (prov_sl.value == "Kalimantan_Barat") {
+        var optionArray = [
+            "|",
+            "kab_bengkayang|Kabupaten Bengkayang",
+            "kab_kapuas_hulu|Kabupaten Kapuas Hulu",
+            "kab_kayong_utara|Kabupaten Kayong Utara",
+            "kab_ketapang|Kabupaten Ketapang",
+            "kab_kubu_raya|Kabupaten Kubu Raya",
+            "kab_landak|Kabupaten Landak",
+            "kab_melawi|Kabupaten Melawi",
+            "kab_mempawah|Kabupaten Mempawah",
+            "kab_sambas|Kabupaten Sambas",
+            "kab_sanggau|Kabupaten Sanggau",
+            "kab_sekadau|Kabupaten Sekadau",
+            "kab_sintang|Kabupaten Sintang",
+            "kota_pontianak|Kota Pontianak",
+            "kota_singkawang|Kota Singkawang"
+          ];          
+    } else if (prov_sl.value == "Kalimantan_Timur") {
+        var optionArray = [
+            "|",
+            "kab_berau|Kabupaten Berau",
+            "kab_kutai_barat|Kabupaten Kutai Barat",
+            "kab_kutai_kartanegara|Kabupaten Kutai Kartanegara",
+            "kab_kutai_timur|Kabupaten Kutai Timur",
+            "kab_mahakam_ulubelu|Kabupaten Mahakam Ulu",
+            "kab_paser|Kabupaten Paser",
+            "kab_penajam_paser_utara|Kabupaten Penajam Paser Utara",
+            "kab_samarinda|Kabupaten Samarinda",
+            "kab_sanggau_wonosobo|Kabupaten Sanggau",
+            "kab_tana_tidung|Kabupaten Tana Tidung",
+            "kab_tarakan|Kabupaten Tarakan",
+            "kota_balikpapan|Kota Balikpapan",
+            "kota_bontang|Kota Bontang",
+            "kota_samarinda|Kota Samarinda"
+          ];          
+    } else if (prov_sl.value == "Kalimatan_Selatan") {
+        var optionArray = [
+            "|",
+            "kab_banjar|Kabupaten Banjar",
+            "kab_barito_kuala|Kabupaten Barito Kuala",
+            "kab_hulu_sungai_selatan|Kabupaten Hulu Sungai Selatan",
+            "kab_hulu_sungai_tengah|Kabupaten Hulu Sungai Tengah",
+            "kab_hulu_sungai_utara|Kabupaten Hulu Sungai Utara",
+            "kab_kotabaru|Kabupaten Kotabaru",
+            "kab_tabalong|Kabupaten Tabalong",
+            "kab_tanah_bumbu|Kabupaten Tanah Bumbu",
+            "kab_tanah_laut|Kabupaten Tanah Laut",
+            "kab_tapin|Kabupaten Tapin",
+            "kota_banjarbaru|Kota Banjarbaru",
+            "kota_banjarmasin|Kota Banjarmasin"
+          ];    
+    } else if (prov_sl.value == "Kalimatan_Tengah") {
+        var optionArray = [
+            "|",
+            "kab_barito_selatan|Kabupaten Barito Selatan",
+            "kab_barito_timur|Kabupaten Barito Timur",
+            "kab_barito_utara|Kabupaten Barito Utara",
+            "kab_gunung_mas|Kabupaten Gunung Mas",
+            "kab_kapuas|Kabupaten Kapuas",
+            "kab_katingan|Kabupaten Katingan",
+            "kab_kotawaringin_barat|Kabupaten Kotawaringin Barat",
+            "kab_kotawaringin_timur|Kabupaten Kotawaringin Timur",
+            "kab_lamandau|Kabupaten Lamandau",
+            "kab_murung_raya|Kabupaten Murung Raya",
+            "kab_pulang_pisau|Kabupaten Pulang Pisau",
+            "kab_sukamara|Kabupaten Sukamara",
+            "kab_seruyan|Kabupaten Seruyan",
+            "kota_palangka_raya|Kota Palangka Raya"
+          ];          
+    } else if (prov_sl.value == "Kalimatan_Utara") {
+        var optionArray = [
+            "|",
+            "kab_bulungan|Kabupaten Bulungan",
+            "kab_malinau|Kabupaten Malinau",
+            "kab_nunukan|Kabupaten Nunukan",
+            "kab_tana_tidung|Kabupaten Tana Tidung",
+            "kota_tarakan|Kota Tarakan"
+          ];          
+    } else if (prov_sl.value == "Kepulauan_Riau") {
+        var optionArray = [
+            "|",
+            "kab_bintan|Kabupaten Bintan",
+            "kab_karimun|Kabupaten Karimun",
+            "kab_kepulauan_anambas|Kabupaten Kepulauan Anambas",
+            "kab_lingga|Kabupaten Lingga",
+            "kab_natuna|Kabupaten Natuna",
+            "kota_batam|Kota Batam",
+            "kota_tanjungpinang|Kota Tanjung Pinang"
+          ];          
+    } else if (prov_sl.value == "Lampung") {
+        var optionArray = [
+            "|",
+            "kab_lampung_barat|Kabupaten Lampung Barat",
+            "kab_lampung_selatan|Kabupaten Lampung Selatan",
+            "kab_lampung_tengah|Kabupaten Lampung Tengah",
+            "kab_lampung_timur|Kabupaten Lampung Timur",
+            "kab_lampung_utara|Kabupaten Lampung Utara",
+            "kab_mesuji|Kabupaten Mesuji",
+            "kab_pesawaran|Kabupaten Pesawaran",
+            "kab_pringsewu|Kabupaten Pringsewu",
+            "kab_tanggamus|Kabupaten Tanggamus",
+            "kab_tulang_bawang|Kabupaten Tulang Bawang",
+            "kab_tulang_bawang_barat|Kabupaten Tulang Bawang Barat",
+            "kab_way_kanan|Kabupaten Way Kanan",
+            "kota_bandar_lampung|Kota Bandar Lampung",
+            "kota_metro|Kota Metro"
+          ];          
+    } else if (prov_sl.value == "Maluku") {
+        var optionArray = [
+            "|",
+            "kab_buru|Kabupaten Buru",
+            "kab_buru_selatan|Kabupaten Buru Selatan",
+            "kab_kepulauan_aru|Kabupaten Kepulauan Aru",
+            "kab_maluku_barat_daya|Kabupaten Maluku Barat Daya",
+            "kab_maluku_tengah|Kabupaten Maluku Tengah",
+            "kab_maluku_tenggara|Kabupaten Maluku Tenggara",
+            "kab_maluku_tenggara_barat|Kabupaten Maluku Tenggara Barat",
+            "kab_seram_bagian_barat|Kabupaten Seram Bagian Barat",
+            "kab_seram_bagian_timur|Kabupaten Seram Bagian Timur",
+            "kota_ambon|Kota Ambon",
+            "kota_tual|Kota Tual"
+          ];          
+    } else if (prov_sl.value == "Maluku_Utara") {
+        var optionArray = [
+            "|",
+            "kab_halmahera_barat|Kabupaten Halmahera Barat",
+            "kab_halmahera_tengah|Kabupaten Halmahera Tengah",
+            "kab_halmahera_selatan|Kabupaten Halmahera Selatan",
+            "kab_halmahera_utara|Kabupaten Halmahera Utara",
+            "kab_kepulauan_sula|Kabupaten Kepulauan Sula",
+            "kab_halmahera_timur|Kabupaten Halmahera Timur",
+            "kab_pulau_morotai|Kabupaten Pulau Morotai",
+            "kab_pulau_taliabu|Kabupaten Pulau Taliabu",
+            "kota_ternate|Kota Ternate",
+            "kota_tidore_kepulauan|Kota Tidore Kepulauan"
+          ];          
+    } else if (prov_sl.value == "Nusa_Tenggara_Barat") {
+        var optionArray = [
+            "|",
+            "kab_bima|Kabupaten Bima",
+            "kab_dompu|Kabupaten Dompu",
+            "kab_lombok_barat|Kabupaten Lombok Barat",
+            "kab_lombok_tengah|Kabupaten Lombok Tengah",
+            "kab_lombok_timur|Kabupaten Lombok Timur",
+            "kab_lombok_utara|Kabupaten Lombok Utara",
+            "kab_sumbawa|Kabupaten Sumbawa",
+            "kab_sumbawa_barat|Kabupaten Sumbawa Barat",
+            "kota_bima|Kota Bima",
+            "kota_mataram|Kota Mataram"
+          ];          
+    } else if (prov_sl.value == "Nusa_Tenggara_Timur") {
+        var optionArray = [
+            "|",
+            "kab_alor|Kabupaten Alor",
+            "kab_belu|Kabupaten Belu",
+            "kab_ende|Kabupaten Ende",
+            "kab_flores_timur|Kabupaten Flores Timur",
+            "kab_kupang|Kabupaten Kupang",
+            "kab_lembata|Kabupaten Lembata",
+            "kab_manggarai|Kabupaten Manggarai",
+            "kab_manggarai_barat|Kabupaten Manggarai Barat",
+            "kab_manggarai_timur|Kabupaten Manggarai Timur",
+            "kab_ngada|Kabupaten Ngada",
+            "kab_rote_ndao|Kabupaten Rote Ndao",
+            "kab_sabu_raijua|Kabupaten Sabu Raijua",
+            "kab_sikka|Kabupaten Sikka",
+            "kab_sumba_barat|Kabupaten Sumba Barat",
+            "kab_sumba_barat_daya|Kabupaten Sumba Barat Daya",
+            "kab_sumba_tengah|Kabupaten Sumba Tengah",
+            "kab_sumba_timur|Kabupaten Sumba Timur",
+            "kab_timor_tengah_selatan|Kabupaten Timor Tengah Selatan",
+            "kab_timor_tengah_utara|Kabupaten Timor Tengah Utara",
+            "kota_kupang|Kota Kupang"
+          ];          
+    } else if (prov_sl.value == "Papua") {
+        var optionArray = [
+            "|",
+            "kab_asmat|Kabupaten Asmat",
+            "kab_biak_numfor|Kabupaten Biak Numfor",
+            "kab_boven_digoel|Kabupaten Boven Digoel",
+            "kab_deiyai|Kabupaten Deiyai",
+            "kab_dogiyai|Kabupaten Dogiyai",
+            "kab_intan_jaya|Kabupaten Intan Jaya",
+            "kab_jayapura|Kabupaten Jayapura",
+            "kab_jayawijaya|Kabupaten Jayawijaya",
+            "kab_keerom|Kabupaten Keerom",
+            "kab_kepulauan_yapen|Kabupaten Kepulauan Yapen",
+            "kab_lanny_jaya|Kabupaten Lanny Jaya",
+            "kab_mamberamo_raya|Kabupaten Mamberamo Raya",
+            "kab_mamberamo_tengah|Kabupaten Mamberamo Tengah",
+            "kab_mappi|Kabupaten Mappi",
+            "kab_merauke|Kabupaten Merauke",
+            "kab_mimika|Kabupaten Mimika",
+            "kab_nabire|Kabupaten Nabire",
+            "kab_nduga|Kabupaten Nduga",
+            "kab_paniai|Kabupaten Paniai",
+            "kab_pegunungan_bintang|Kabupaten Pegunungan Bintang",
+            "kab_puncak|Kabupaten Puncak",
+            "kab_puncak_jaya|Kabupaten Puncak Jaya",
+            "kab_sarmi|Kabupaten Sarmi",
+            "kab_supiori|Kabupaten Supiori",
+            "kab_tanah_merah|Kabupaten Tanah Merah",
+            "kab_toba|Kabupaten Toba",
+            "kab_waropen|Kabupaten Waropen",
+            "kab_yahukimo|Kabupaten Yahukimo",
+            "kab_yalimo|Kabupaten Yalimo",
+            "kota_jayapura|Kota Jayapura"
+          ];          
+    } else if (prov_sl.value == "Papua_Barat") {
+        var optionArray = [
+            "|",
+            "kab_fak_fak|Kabupaten Fakfak",
+            "kab_kaimana|Kabupaten Kaimana",
+            "kab_manokwari|Kabupaten Manokwari",
+            "kab_manokwari_selatan|Kabupaten Manokwari Selatan",
+            "kab_maybrat|Kabupaten Maybrat",
+            "kab_paniai|Kabupaten Paniai",
+            "kab_pegunungan_arfak|Kabupaten Pegunungan Arfak",
+            "kab_raja_ampat|Kabupaten Raja Ampat",
+            "kab_sorong|Kabupaten Sorong",
+            "kab_sorong_selatan|Kabupaten Sorong Selatan",
+            "kab_tambrauw|Kabupaten Tambrauw",
+            "kab_teluk_bintuni|Kabupaten Teluk Bintuni",
+            "kab_teluk_wondama|Kabupaten Teluk Wondama",
+            "kab_kepulauan_misool|Kabupaten Kepulauan Misool",
+            "kab_kepulauan_sawiati|Kabupaten Kepulauan Sawiat",
+            "kab_kepulauan_raja_ampat|Kabupaten Kepulauan Raja Ampat",
+            "kota_sorong|Kota Sorong"
+          ];          
+    } else if (prov_sl.value == "Riau") {
+        var optionArray = [
+            "|",
+            "kab_bengkalis|Kabupaten Bengkalis",
+            "kab_indragiri_hilir|Kabupaten Indragiri Hilir",
+            "kab_indragiri_hulu|Kabupaten Indragiri Hulu",
+            "kab_kampar|Kabupaten Kampar",
+            "kab_kepulauan_meranti|Kabupaten Kepulauan Meranti",
+            "kab_kuantan_singingi|Kabupaten Kuantan Singingi",
+            "kab_pelalawan|Kabupaten Pelalawan",
+            "kab_rokan_hulu|Kabupaten Rokan Hulu",
+            "kab_rokan_hilir|Kabupaten Rokan Hilir",
+            "kab_sabak_auai|Kabupaten Siak",
+            "kab_sungaipenuh|Kota Sungai Penuh",
+            "kab_kota_dumai|Kota Dumai",
+            "kab_kota_pekanbaru|Kota Pekanbaru"
+          ];          
+    } else if (prov_sl.value == "Sulawesi_Barat") {
+        var optionArray = [
+            "|",
+            "kab_majene|Kabupaten Majene",
+            "kab_polewali_mandar|Kabupaten Polewali Mandar",
+            "kab_mamasa|Kabupaten Mamasa",
+            "kab_mamuju_tengah|Kabupaten Mamuju Tengah",
+            "kab_mamuju|Kabupaten Mamuju",
+            "kab_mamuju_utara|Kabupaten Mamuju Utara",
+            "kota_mamuju|Kota Mamuju"
+          ];          
+    } else if (prov_sl.value == "Sulawesi_Selatan") {
+        var optionArray = [
+            "|",
+            "kab_bantaeng|Kabupaten Bantaeng",
+            "kab_barru|Kabupaten Barru",
+            "kab_bone|Kabupaten Bone",
+            "kab_bulukumba|Kabupaten Bulukumba",
+            "kab_enna|Kabupaten Enrekang",
+            "kab_gowa|Kabupaten Gowa",
+            "kab_jeneponto|Kabupaten Jeneponto",
+            "kab_kepulauan_selayar|Kabupaten Kepulauan Selayar",
+            "kab_luwu|Kabupaten Luwu",
+            "kab_luwu_timur|Kabupaten Luwu Timur",
+            "kab_luwu_utara|Kabupaten Luwu Utara",
+            "kab_maros|Kabupaten Maros",
+            "kab_pangkajene_dan_kepulauan|Kabupaten Pangkajene dan Kepulauan",
+            "kab_pinrang|Kabupaten Pinrang",
+            "kab_sidenreng_rappang|Kabupaten Sidenreng Rappang",
+            "kab_soppeng|Kabupaten Soppeng",
+            "kab_takalar|Kabupaten Takalar",
+            "kab_toraja_utara|Kabupaten Toraja Utara",
+            "kab_wajo|Kabupaten Wajo",
+            "kota_makassar|Kota Makassar",
+            "kota_parepare|Kota Parepare",
+            "kota_palopo|Kota Palopo"
+          ];          
+    } else if (prov_sl.value == "Sulawesi_Tengah") {
+        var optionArray = [
+            "|",
+            "kab_banggai|Kabupaten Banggai",
+            "kab_banggai_kepulauan|Kabupaten Banggai Kepulauan",
+            "kab_banggai_laut|Kabupaten Banggai Laut",
+            "kab_buol|Kabupaten Buol",
+            "kab_donggala|Kabupaten Donggala",
+            "kab_morowali|Kabupaten Morowali",
+            "kab_morowali_utara|Kabupaten Morowali Utara",
+            "kab_parigi_moutong|Kabupaten Parigi Moutong",
+            "kab_poso|Kabupaten Poso",
+            "kab_sigi|Kabupaten Sigi",
+            "kab_toli_toli|Kabupaten Toli-Toli",
+            "kota_palangkaraya|Kota Palangkaraya"
+          ];          
+    } else if (prov_sl.value == "Sulawesi_Tenggara") {
+        var optionArray = [
+            "|",
+            "kab_bombana|Kabupaten Bombana",
+            "kab_buton|Kabupaten Buton",
+            "kab_buton_selatan|Kabupaten Buton Selatan",
+            "kab_buton_tengah|Kabupaten Buton Tengah",
+            "kab_buton_utara|Kabupaten Buton Utara",
+            "kab_kolaka|Kabupaten Kolaka",
+            "kab_kolaka_timur|Kabupaten Kolaka Timur",
+            "kab_kolaka_utara|Kabupaten Kolaka Utara",
+            "kab_konawe|Kabupaten Konawe",
+            "kab_konawe_kepulauan|Kabupaten Konawe Kepulauan",
+            "kab_konawe_selatan|Kabupaten Konawe Selatan",
+            "kab_konawe_utara|Kabupaten Konawe Utara",
+            "kab_muna|Kabupaten Muna",
+            "kab_muna_barat|Kabupaten Muna Barat",
+            "kab_wakatobi|Kabupaten Wakatobi",
+            "kota_baubau|Kota Baubau",
+            "kota_kendari|Kota Kendari"
+          ];          
+    } else if (prov_sl.value == "Sulawesi_Utara") {
+        var optionArray = [
+            "|",
+            "kab_bolaang_mongondow|Kabupaten Bolaang Mongondow",
+            "kab_bolaang_mongondow_selatan|Kabupaten Bolaang Mongondow Selatan",
+            "kab_bolaang_mongondow_timur|Kabupaten Bolaang Mongondow Timur",
+            "kab_bolaang_mongondow_utara|Kabupaten Bolaang Mongondow Utara",
+            "kab_kepulauan_sangir|Kabupaten Kepulauan Sangihe",
+            "kab_kepulauan_talaud|Kabupaten Kepulauan Talaud",
+            "kab_minahasa|Kabupaten Minahasa",
+            "kab_minahasa_selatan|Kabupaten Minahasa Selatan",
+            "kab_minahasa_tenggara|Kabupaten Minahasa Tenggara",
+            "kab_minahasa_utara|Kabupaten Minahasa Utara",
+            "kota_bitung|Kota Bitung",
+            "kota_kotamobagu|Kota Kotamobagu",
+            "kota_manado|Kota Manado",
+            "kota_tomohon|Kota Tomohon"
+          ];          
+    } else if (prov_sl.value == "Sumatera_Barat") {
+        var optionArray = [
+            "|",
+            "kab_agam|Kabupaten Agam",
+            "kab_dharmasraya|Kabupaten Dharmasraya",
+            "kab_lima_puluh_kota|Kabupaten Lima Puluh Kota",
+            "kab_pariaman|Kabupaten Pariaman",
+            "kab_pasaman|Kabupaten Pasaman",
+            "kab_pasaman_barat|Kabupaten Pasaman Barat",
+            "kab_sijunjung|Kabupaten Sijunjung",
+            "kab_solok|Kabupaten Solok",
+            "kab_solok_selatan|Kabupaten Solok Selatan",
+            "kab_tanah_datar|Kabupaten Tanah Datar",
+            "kab_padang_pariaman|Kabupaten Padang Pariaman",
+            "kota_bukittinggi|Kota Bukittinggi",
+            "kota_padang|Kota Padang",
+            "kota_padang_panjang|Kota Padang Panjang",
+            "kota_pariaman|Kota Pariaman",
+            "kota_payakumbuh|Kota Payakumbuh",
+            "kota_sawahlunto|Kota Sawahlunto",
+            "kota_solok|Kota Solok"
+          ];          
+    } else if (prov_sl.value == "Sumatera_Utara") {
+        var optionArray = [
+            "|",
+            "kab_asahan|Kabupaten Asahan",
+            "kab_batubara|Kabupaten Batubara",
+            "kab_dairi|Kabupaten Dairi",
+            "kab_deli_serdang|Kabupaten Deli Serdang",
+            "kab_humbang_hasundutan|Kabupaten Humbang Hasundutan",
+            "kab_karo|Kabupaten Karo",
+            "kab_labuhan_batu|Kabupaten Labuhan Batu",
+            "kab_labuhan_batu_selatan|Kabupaten Labuhan Batu Selatan",
+            "kab_labuhan_batu_utara|Kabupaten Labuhan Batu Utara",
+            "kab_langkat|Kabupaten Langkat",
+            "kab_mandailing_natal|Kabupaten Mandailing Natal",
+            "kab_nias|Kabupaten Nias",
+            "kab_nias_selatan|Kabupaten Nias Selatan",
+            "kab_nias_barat|Kabupaten Nias Barat",
+            "kab_nias_utara|Kabupaten Nias Utara",
+            "kab_padang_lawas|Kabupaten Padang Lawas",
+            "kab_padang_lawas_utara|Kabupaten Padang Lawas Utara",
+            "kab_pakpak_bharat|Kabupaten Pakpak Bharat",
+            "kab_samosir|Kabupaten Samosir",
+            "kab_serdang_bedagai|Kabupaten Serdang Bedagai",
+            "kab_simalungun|Kabupaten Simalungun",
+            "kab_tanjung_balai|Kota Tanjung Balai",
+            "kab_tebing_tinggi|Kota Tebing Tinggi",
+            "kab_toba_samosir|Kabupaten Toba Samosir",
+            "kota_binjai|Kota Binjai",
+            "kota_gunungsitoli|Kota Gunungsitoli",
+            "kota_medan|Kota Medan",
+            "kota_padangsidempuan|Kota Padangsidempuan",
+            "kota_pematangsiantar|Kota Pematangsiantar",
+            "kota_sibolga|Kota Sibolga",
+            "kota_tanjungbalai|Kota Tanjungbalai",
+            "kota_tebingtiggi|Kota Tebing Tinggi"
+          ];          
+    } else if (prov_sl.value == "Yogyakarta") {
+        var optionArray = [
+            "|",
+            "kab_bantul|Kabupaten Bantul",
+            "kab_gunung_kidul|Kabupaten Gunung Kidul",
+            "kab_kulon_progo|Kabupaten Kulon Progo",
+            "kab_sleman|Kabupaten Sleman",
+            "kota_yogyakarta|Kota Yogyakarta"
+          ];          
+    } else if (prov_sl.value == "Sumatera_Selatan") {
+        var optionArray = [
+            "|",
+            "kab_banyu_asin|Kabupaten Banyu Asin",
+            "kab_empat_lawang|Kabupaten Empat Lawang",
+            "kab_lahat|Kabupaten Lahat",
+            "kab_lubuk_linggau|Kabupaten Lubuk Linggau",
+            "kab_muaradua|Kabupaten Muara Dua",
+            "kab_musirawas|Kabupaten Musi Rawas",
+            "kab_musirawas_utara|Kabupaten Musi Rawas Utara",
+            "kab_ogan_ilir|Kabupaten Ogan Ilir",
+            "kab_ogan_komering_ilir|Kabupaten Ogan Komering Ilir",
+            "kab_ogan_komering_uluh|Kabupaten Ogan Komering Uluh",
+            "kab_ogan_komering_uluh_selatan|Kabupaten Ogan Komering Uluh Selatan",
+            "kab_pagar_alam|Kota Pagar Alam",
+            "kab_palembang|Kota Palembang",
+            "kab_prabumulih|Kota Prabumulih"
+          ];          
+    }
+
 
     for (var index in optionArray) {
         var pair = optionArray[index].split("|");
