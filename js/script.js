@@ -104,64 +104,125 @@ var overlayLayers = {
 
 L.control.layers(basemaps, overlayLayers).addTo(map);
 
-map.on('click', function(e) {
+// map.on('click', function(e) {
+//     var topLayer = null;
+//     var maxZIndex = -Infinity;
 
-    var topLayer = null;
-    var maxZIndex = -Infinity;
+//     // Iterate over the overlayLayers object to find the top layer
+//     for (var layerName in overlayLayers) {
+//         var layer = overlayLayers[layerName];
+//         var zIndex = layer.options.zIndex || 0;
 
-    // Iterate over the overlayLayers object to find the top layer
-    for (var layerName in overlayLayers) {
-        var layer = overlayLayers[layerName];
-        var zIndex = layer.options.zIndex || 0;
+//         var visible = map.hasLayer(layer);
 
-        var visible = map.hasLayer(layer);
+//         if (zIndex > maxZIndex && visible) {
+//             topLayer = layer;
+//             maxZIndex = zIndex;
+//         }
+//     }
 
-        if (zIndex > maxZIndex && visible) {
-            topLayer = layer;
-            maxZIndex = zIndex;
-        }
-    }
+//     if (topLayer) {
+//         var url = getFeatureInfoUrl(e.latlng, topLayer);
+//         fetch(url)
+//             .then(function(response) {
+//                 return response.text();
+//         }).then(function(data) {
 
-    if (topLayer) {
-        var url = getFeatureInfoUrl(e.latlng, topLayer);
-        console.log("URL: " + url);
+//             var name = "";
+//             if (topLayer == kodam_koramil) {
+//                 name = getKodimKoramilName(data);
+//             } else if (topLayer == kepolisian) {
+//                 name = getKepolisianName(data);
+//             } else if (topLayer == pulau_terluar) {
+//                 name = getPulauTerluarName(data);
+//             } else if (topLayer == cityLayer) {
+//                 name = getKotaName(data)
+//             } else if (topLayer == pos_perbatasan) {
+//                 name = getPosPerbatasanName(data);
+//             }
+
+//             var popupContent = name;
     
-        fetch(url)
-            .then(function(response) {
-                console.log(response);
-                return response.text();
-        }).then(function(data) {
-
-            var name = "";
-            if (topLayer == kodam_koramil) {
-                name = getKodimKoramilName(data);
-                console.log(name);
-            } else if (topLayer == kepolisian) {
-                name = getKepolisianName(data);
-                console.log(name);
-            } else if (topLayer == pulau_terluar) {
-                name = getPulauTerluarName(data);
-                console.log(data);
-            } else if (topLayer == cityLayer) {
-                name = getKotaName(data)
-                //console.log(data);
-            } else if (topLayer == pos_perbatasan) {
-                name = getPosPerbatasanName(data);
-                console.log(data);
-            }
-
-            var popupContent = name;
-    
-            // Display the popup at the clicked location
-            L.popup()
-                .setLatLng(e.latlng)
-                .setContent(popupContent)
-                .openOn(map);
-        });
-    }
+//             // Display the popup at the clicked location
+//             L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map);
+//         });
+//     }
+// });
 
 
+// -----------------------------------------------------------------------------------------
+map.on('click', function(e)  {    
+    console.log("click");
+    fetchData(e);
 });
+
+async function fetchData(e) {
+    for (var i in overlayLayers) {
+      var layer = overlayLayers[i];
+      var layer_name = layer.wmsParams.layers;
+      var isVisible = map.hasLayer(layer);
+  
+      if (layer && isVisible) {
+        // console.log(layer_name);
+  
+        var isNull = false;
+        var url = getFeatureInfoUrl(e.latlng, layer);
+        
+        try {
+          const response = await fetch(url);
+          const data = await response.text();
+          
+          var htmlContent = data;
+          var container = document.createElement('div');
+  
+          container.innerHTML = htmlContent;
+          var table = container.querySelector('table.featureInfo');
+  
+          if (table === null) {
+            // console.log("table is null");
+            isNull = true;
+          }
+           
+        } catch (error) {
+          console.log('Error:', error);
+        }
+
+        if (!isNull) {
+            getPopupName(e, layer);
+            break;
+        }
+        
+      }
+    }
+}
+
+function getPopupName(e, layer) {
+    var url = getFeatureInfoUrl(e.latlng, layer);
+    fetch(url)
+        .then(function(response) {
+            return response.text();
+    }).then(function(data) {
+
+        var name = "";
+        if (layer == kodam_koramil) {
+            name = getKodimKoramilName(data);
+        } else if (layer == kepolisian) {
+            name = getKepolisianName(data);
+        } else if (layer == pulau_terluar) {
+            name = getPulauTerluarName(data);
+        } else if (layer == cityLayer) {
+            name = getKotaName(data)
+        } else if (layer == pos_perbatasan) {
+            name = getPosPerbatasanName(data);
+        }
+
+        var popupContent = name;
+
+        // Display the popup at the clicked location
+        L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map);
+    });
+}
+  
 
 // Function to construct the GetFeatureInfo request URL
 function getFeatureInfoUrl(latlng, layer) {
@@ -219,7 +280,11 @@ function getPulauTerluarName(data) {
     var container = document.createElement('div');
 
     container.innerHTML = htmlContent;            
-    var table = container.querySelector('table.featureInfo'); 
+    var table = container.querySelector('table.featureInfo');
+    if (table === null) {
+        return "";
+    }
+    
     var rows = table.querySelectorAll('tr');
     var name = "";
 
@@ -250,6 +315,10 @@ function getPosPerbatasanName(data) {
 
     container.innerHTML = htmlContent;            
     var table = container.querySelector('table.featureInfo'); 
+    if (table === null) {
+        return "";
+    }
+
     var rows = table.querySelectorAll('tr');
     var name = "";
     for (var i = 1; i < rows.length; i++) {
@@ -276,6 +345,11 @@ function getKodimKoramilName(data) {
 
     container.innerHTML = htmlContent;            
     var table = container.querySelector('table.featureInfo'); 
+
+    if (table === null) {
+        return "";
+    }
+
     var rows = table.querySelectorAll('tr');
     var name = "";
     for (var i = 1; i < rows.length; i++) {
@@ -308,6 +382,9 @@ function getKepolisianName(data) {
 
     container.innerHTML = htmlContent;            
     var table = container.querySelector('table.featureInfo'); 
+    if (table === null) {
+        return "";
+    }
 
     var rows = table.querySelectorAll('tr');
     var name = "";
