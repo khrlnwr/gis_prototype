@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Prototype</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+
+    <!-- Load Leaflet from CDN -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""
+    />
+    <script
+        src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""
+    ></script>
+
+    <!-- Load Esri Leaflet from CDN -->
+    <script
+        src="https://unpkg.com/esri-leaflet@2.3.3/dist/esri-leaflet.js"
+        integrity="sha512-cMQ5e58BDuu1pr9BQ/eGRn6HaR6Olh0ofcHFWe5XesdCITVuSBiBZZbhCijBe5ya238f/zMMRYIMIIg1jxv4sQ=="
+        crossorigin=""
+    ></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-identity">
+            <img src="assets/bais.png" alt="icon" width="70" height="60"> 
+            <div>
+                <p class="header-top">Badan Intelijen Strategis TNI</p>
+                <p class="header-bottom">Satuan Intelijen Teknik</p>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <p>Home</p>
+            <p>About</p>
+        </div>
+    </nav>
+
+    <section class="hero-container">
+
+        <div id="wrapper"> 
+            <div id="map"></div>
+            <form class="form">                
+
+                <div class="modal-body">
+                    <div class="select-container">
+                        <select name="provinsi_selection" id="provinsi_selection" onchange="populateRegion(this.id, 'region_selection')">
+                            <option value="Aceh">Aceh</option>
+                            <option value="Bali">Bali</option>
+                            <option value="Bangka_Belitung">Bangka Belitung</option>
+                            <option value="Banten">Banten</option>
+                            <option value="Bengkulu">Bengkulu</option>
+                            <option value="Gorontalo">Gorontalo</option>
+                            <option value="Jakarta">Jakarta</option>
+                            <option value="Jambi">Jambi</option>
+                            <option value="Jawa_Barat">Jawa Barat</option>
+                            <option value="Jawa_Tengah">Jawa Tengah</option>
+                            <option value="Jawa_Timur">Jawa Timur</option>
+                            <option value="Kalimantan_Barat">Kalimantan Barat</option>
+                            <option value="Kalimantan_Selatan">Kalimantan Selatan</option>
+                            <option value="Kalimantan_Tengah">Kalimantan Tengah</option>
+                            <option value="Kalimantan_Timur">Kalimantan Timur</option>
+                            <option value="Kalimantan_Utara">Kalimantan Utara</option>
+                            <option value="Kepulauan_Riau">Kepulauan Riau</option>
+                            <option value="Lampung">Lampung</option>
+                            <option value="Maluku">Maluku</option>
+                            <option value="Maluku_Utara">Maluku Utara</option>
+                            <option value="Nusa_Tenggara_Barat">Nusa Tenggara Barat</option>
+                            <option value="Nusa_Tenggara_Timur">Nusa Tenggara Timur</option>
+                            <option value="Papua">Papua</option>
+                            <option value="Papua_Barat">Papua Barat</option>
+                            <option value="Riau">Riau</option>
+                            <option value="Sulawesi_Barat">Sulawesi Barat</option>
+                            <option value="Sulawesi_Selatan">Sulawesi Selatan</option>
+                            <option value="Sulawesi_Tengah">Sulawesi Tengah</option>
+                            <option value="Sulawesi_Tenggara">Sulawesi Tenggara</option>
+                            <option value="Sulawesi_Utara">Sulawesi Utara</option>
+                            <option value="Sumatera_Barat">Sumatera Barat</option>
+                            <option value="Sumatera_Selatan">Sumatera Selatan</option>
+                            <option value="Sumatera_Utara">Sumatera Utara</option>
+                            <option value="Yogyakarta">Yogyakarta</option>
+                        </select>
+                    </div>
+    
+                    <div class="select-container">
+                        <select name="region_selection" id="region_selection" onchange="changeCenterCoordinate('provinsi_selection', this.id)"></select>
+                    </div>
+                </div>
+
+            </form> 
+        </div>    
+    </section>
+    <script src="js/script.js"></script>
+</body>
+</html>
