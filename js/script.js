@@ -44,7 +44,23 @@ const hurricanesLayer = L.esri.dynamicMapLayer({
     url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer/",
     opacity: 1,
     useCors: false });
+
+var layer_banjir = L.esri.dynamicMapLayer({
+        url: "https://gis.bnpb.go.id/server/rest/services/banjir_juli_2020_ind_timur/MapServer/",
+        opacity: 1,
+        useCors: false,
+        transparent: true,
+        format: 'image/png'
+    });
     
+var layer_longsor = L.esri.dynamicMapLayer({
+        url: "https://gis.bnpb.go.id/server/rest/services/FU_LongsorRumpin_2021/MapServer",
+        opacity: 1,
+        useCors: false,
+        transparent: true,
+        format: 'image/png',        
+    });
+
 var provinceLayer = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
     layers: workspace + ':IDN_adm1',
     opacity: 0.3
@@ -99,7 +115,9 @@ var overlayLayers = {
     "Police Layer": kepolisian,
     "Kodim Koramil": kodam_koramil,
     "Pulau Terluar": pulau_terluar,
-    "Pos Perbatasan": pos_perbatasan
+    "Pos Perbatasan": pos_perbatasan,
+    "Bencana Banjir": layer_banjir,
+    "Longsor": layer_longsor
 };
 
 L.control.layers(basemaps, overlayLayers).addTo(map);
@@ -158,41 +176,65 @@ map.on('click', function(e)  {
 
 async function fetchData(e) {
     for (var i in overlayLayers) {
-      var layer = overlayLayers[i];
-      var layer_name = layer.wmsParams.layers;
-      var isVisible = map.hasLayer(layer);
+        var layer = overlayLayers[i];
+        var isVisible = map.hasLayer(layer);
+
+        if (!isVisible) 
+            continue;
+
+        if (layer instanceof L.esri.DynamicMapLayer) {
+            console.log("layer is dynamic map layer " + layer);
+
+            var serviceDescription = ""
+            layer.metadata(function(error, metadata) {
+                // console.log(metadata);
+                serviceDescription = metadata['serviceDescription'];
+                // console.log(serviceDescription);
+                L.popup().setLatLng(e.latlng).setContent(serviceDescription).openOn(map);                
+            });
+
+            break;
+        } else {
+
+            var layer_name = layer.wmsParams.layers;
   
-      if (layer && isVisible) {
-        // console.log(layer_name);
-  
-        var isNull = false;
-        var url = getFeatureInfoUrl(e.latlng, layer);
+            if (layer && isVisible) {
+                console.log(layer_name);
         
-        try {
-          const response = await fetch(url);
-          const data = await response.text();
-          
-          var htmlContent = data;
-          var container = document.createElement('div');
-  
-          container.innerHTML = htmlContent;
-          var table = container.querySelector('table.featureInfo');
-  
-          if (table === null) {
-            // console.log("table is null");
-            isNull = true;
-          }
-           
-        } catch (error) {
-          console.log('Error:', error);
+                var isNull = false;
+                var url = getFeatureInfoUrl(e.latlng, layer);
+                
+                try {
+                    const response = await fetch(url);          
+                    const data = await response.text();
+        
+                    // console.log(data);
+                    
+                    var htmlContent = data;
+                    var container = document.createElement('div');
+            
+                    container.innerHTML = htmlContent;
+                    var table = container.querySelector('table.featureInfo');
+            
+                    if (table === null) {
+                        console.log("table is null");
+                        isNull = true;
+                    }
+                
+                } catch (error) {
+                    console.log('Error:', error);
+                }
+    
+                if (!isNull) {
+                    getPopupName(e, layer);
+                    break;
+                }
+            
+            }
+
         }
 
-        if (!isNull) {
-            getPopupName(e, layer);
-            break;
-        }
-        
-      }
+
     }
 }
 
