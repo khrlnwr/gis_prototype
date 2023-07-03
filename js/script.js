@@ -7,7 +7,7 @@ var zoom_level = 6;
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
 const workspace = "trickworld";
 
-// var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);    
+// var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);
 
 // Define the basemaps
 var basemaps = {
@@ -15,12 +15,12 @@ var basemaps = {
     "OpenStreetMap": L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '© OpenStreetMap contributors'
     }),
-    "OpenStreetMap_DE" : L.tileLayer('https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }),
     "Esri WMS": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+    }),
+    "TopoMap": L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
     })
 };
     
@@ -122,52 +122,6 @@ var overlayLayers = {
 
 L.control.layers(basemaps, overlayLayers).addTo(map);
 
-// map.on('click', function(e) {
-//     var topLayer = null;
-//     var maxZIndex = -Infinity;
-
-//     // Iterate over the overlayLayers object to find the top layer
-//     for (var layerName in overlayLayers) {
-//         var layer = overlayLayers[layerName];
-//         var zIndex = layer.options.zIndex || 0;
-
-//         var visible = map.hasLayer(layer);
-
-//         if (zIndex > maxZIndex && visible) {
-//             topLayer = layer;
-//             maxZIndex = zIndex;
-//         }
-//     }
-
-//     if (topLayer) {
-//         var url = getFeatureInfoUrl(e.latlng, topLayer);
-//         fetch(url)
-//             .then(function(response) {
-//                 return response.text();
-//         }).then(function(data) {
-
-//             var name = "";
-//             if (topLayer == kodam_koramil) {
-//                 name = getKodimKoramilName(data);
-//             } else if (topLayer == kepolisian) {
-//                 name = getKepolisianName(data);
-//             } else if (topLayer == pulau_terluar) {
-//                 name = getPulauTerluarName(data);
-//             } else if (topLayer == cityLayer) {
-//                 name = getKotaName(data)
-//             } else if (topLayer == pos_perbatasan) {
-//                 name = getPosPerbatasanName(data);
-//             }
-
-//             var popupContent = name;
-    
-//             // Display the popup at the clicked location
-//             L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map);
-//         });
-//     }
-// });
-
-
 // -----------------------------------------------------------------------------------------
 map.on('click', function(e)  {    
     console.log("click");
@@ -185,9 +139,12 @@ async function fetchData(e) {
         if (layer instanceof L.esri.DynamicMapLayer) {
             console.log("layer is dynamic map layer " + layer);
 
+            var layer_target = e.target.options.layer;
+            // console.log(layer_target);
+
             var serviceDescription = ""
             layer.metadata(function(error, metadata) {
-                // console.log(metadata);
+                console.log(metadata);
                 serviceDescription = metadata['serviceDescription'];
                 // console.log(serviceDescription);
                 L.popup().setLatLng(e.latlng).setContent(serviceDescription).openOn(map);                
