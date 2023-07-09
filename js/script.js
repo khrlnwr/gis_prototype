@@ -5,7 +5,7 @@ var lat_lng = [-7.328998, 110.499975];
 var zoom_level = 6;
 
 var map = L.map(element.id).setView(lat_lng, zoom_level);    
-const workspace = "trickworld";
+const workspace = "gistrahan";
 
 // var tileLayer = L.esri.basemapLayer("Imagery").addTo(map);
 
@@ -109,6 +109,11 @@ var pos_perbatasan = L.tileLayer.wms('http://localhost:8080/geoserver/' + worksp
     format: 'image/png'
 }); 
 
+var area_kkb = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':KKB',
+    opacity: 0.3
+});
+
 var overlayLayers = {
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
@@ -117,7 +122,8 @@ var overlayLayers = {
     "Pulau Terluar": pulau_terluar,
     "Pos Perbatasan": pos_perbatasan,
     "Bencana Banjir": layer_banjir,
-    "Longsor": layer_longsor
+    "Longsor": layer_longsor,
+    "Area KKB": area_kkb
 };
 
 L.control.layers(basemaps, overlayLayers).addTo(map);
@@ -213,6 +219,9 @@ function getPopupName(e, layer) {
             name = getKotaName(data)
         } else if (layer == pos_perbatasan) {
             name = getPosPerbatasanName(data);
+        } else if (layer == area_kkb) {
+            console.log(data);
+            name = getAreaKKBName(data);
         }
 
         var popupContent = name;
@@ -248,6 +257,35 @@ function getFeatureInfoUrl(latlng, layer) {
     params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
   
     return layer._url + L.Util.getParamString(params, layer._url, true);
+}
+
+function getAreaKKBName(data) {
+    var htmlContent = data;
+    var container = document.createElement('div');
+
+    container.innerHTML = htmlContent;
+    var table = container.querySelector('table.featureInfo');
+    var rows = table.querySelectorAll('tr');
+
+    var name = "";
+    for (var i=1; i<rows.length; i++) {
+        var row = rows[i];
+        var cols = row.querySelectorAll('td');
+        
+        var name_1 = cols[2].textContent;
+        var name_2 = cols[4].textContent;
+
+        var lat = cols[5].textContent;
+        var lng = cols[6].textContent;
+
+        console.log(name_1);
+        console.log(lat);
+
+        name = name_1 + " " + name_2 + " " + lat + ", " + lng;
+        break;
+    }   
+
+    return name;
 }
 
 function getKotaName(data) {
