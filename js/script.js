@@ -114,6 +114,13 @@ var area_kkb = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + 
     opacity: 0.3
 });
 
+var data_gempa = L.tileLayer.wms('http://localhost:8080/geoserver/' + workspace + '/wms?', {
+    layers: workspace + ':Gempa',
+    opacity: 1,
+    transparent: true,
+    format: 'image/png'
+});
+
 var overlayLayers = {
     "Province Layer": provinceLayer,
     "City Layer": cityLayer,
@@ -123,7 +130,8 @@ var overlayLayers = {
     "Pos Perbatasan": pos_perbatasan,
     "Bencana Banjir": layer_banjir,
     "Longsor": layer_longsor,
-    "Area KKB": area_kkb
+    "Area KKB": area_kkb,
+    "Gempa": data_gempa
 };
 
 L.control.layers(basemaps, overlayLayers).addTo(map);
@@ -220,8 +228,10 @@ function getPopupName(e, layer) {
         } else if (layer == pos_perbatasan) {
             name = getPosPerbatasanName(data);
         } else if (layer == area_kkb) {
-            console.log(data);
             name = getAreaKKBName(data);
+        } else if (layer == data_gempa) {
+            console.log(data);
+            name = getDataGempaName(data);
         }
 
         var popupContent = name;
@@ -257,6 +267,33 @@ function getFeatureInfoUrl(latlng, layer) {
     params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
   
     return layer._url + L.Util.getParamString(params, layer._url, true);
+}
+
+function getDataGempaName(data) {
+    var htmlContent = data;
+    var container = document.createElement('div');
+
+    container.innerHTML = htmlContent;
+    var table = container.querySelector('table.featureInfo');
+    var rows = table.querySelectorAll('tr');
+
+    var name = "";
+    for (var i=1; i<rows.length; i++) {
+        var row = rows[i];
+        var cols = row.querySelectorAll('td');
+
+        var lat = cols[2].textContent;
+        var lng = cols[3].textContent;
+        var depth = cols[4].textContent;
+        var magnitude = cols[5].textContent;
+
+        var time = cols[1].textContent;
+        var place = cols[14].textContent;
+
+        name = "Gempa di " + place + " dengan kekuatan " + magnitude + " SR pada waktu " + time;
+    }
+
+    return name;
 }
 
 function getAreaKKBName(data) {
