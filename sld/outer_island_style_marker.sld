@@ -11,7 +11,7 @@
                     <PointSymbolizer>
                         <Graphic>
                             <ExternalGraphic>
-                                <OnlineResource xlink:type="simple" xlink:href="https://cdn-icons-png.flaticon.com/512/6753/6753907.png" />
+                                <OnlineResource xlink:type="simple" xlink:href="https://cdn-icons-png.flaticon.com/512/119/119576.png" />
                                 <Format>image/png</Format>
                             </ExternalGraphic>
                             <Size>20</Size>
@@ -24,4 +24,3 @@
 </StyledLayerDescriptor>
 
 
-<!-- https://cdn-icons-png.flaticon.com/512/119/119576.png -->

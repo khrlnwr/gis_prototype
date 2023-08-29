@@ -11,7 +11,7 @@
                     <PointSymbolizer>
                         <Graphic>
                             <ExternalGraphic>
-                                <OnlineResource xlink:type="simple" xlink:href="https://cdn-icons-png.flaticon.com/512/6753/6753907.png" />
+                                <OnlineResource xlink:type="simple" xlink:href="https://www.nicepng.com/png/detail/154-1542945_garuda-pancasila-square-sticker-3-x-3.png" />
                                 <Format>image/png</Format>
                             </ExternalGraphic>
                             <Size>20</Size>
@@ -22,6 +22,3 @@
         </UserStyle>
     </NamedLayer>
 </StyledLayerDescriptor>
-
-
-<!-- https://cdn-icons-png.flaticon.com/512/119/119576.png -->
